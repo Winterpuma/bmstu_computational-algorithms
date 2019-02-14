@@ -1,9 +1,9 @@
-# Аппроксимация фи-и, восстановление ф-и по ее дискретному значению
+# Аппроксимация ф-и, восстановление ф-и по ее дискретному значению
 
-from math import cos, radians
+from math import cos, radians, ceil
 
 def f(x):
-    return x*x#cos(radians(90*x))
+    return x#cos(radians(90*x))
 
 def get_array(x_beg, step, amount):
     x_tbl = [x_beg + step*i for i in range(amount)]
@@ -13,36 +13,72 @@ def get_array(x_beg, step, amount):
 def print_table(x, y):
     length = len(x)
     for i in range(length):
-        print(x[i], y[i])
+        print("%.4f %.4f" % (x[i], y[i]))
     print()
 
-def get_matr(tbl, n): #n - кол-во узлов
-    for i in range(n-1):
-        T = []
-        for j in range(n-i-1):
-            T.append((tbl[i+1][j] - tbl[i+1][j+1]) / (tbl[0][j] - tbl[0][i+j+1]))
-        tbl.append(T)
+def get_matr(tbl, n):
+    for i in range(n):
+        tmp = []
+        for j in range(n-i):
+            tmp.append((tbl[i+1][j] - tbl[i+1][j+1]) / (tbl[0][j] - tbl[0][i+j+1]))
+        tbl.append(tmp)
     return tbl
+
+# Choose n dots nearest to x in tbl
+def choose_dots(tbl, n, x):
+    tbl_len = len(tbl[0])
+    i_near = min(range(tbl_len), key = lambda i: abs(tbl[0][i] - x)) # index of nearest value
+
+    print(i_near, tbl[0][i_near])
+    space_needed = ceil(n / 2)
+    
+    if (i_near + space_needed + 1> tbl_len):
+        i_end = tbl_len
+        i_start = tbl_len - n
+    elif (i_near < space_needed):
+        i_start = 0
+        i_end = n
+    else:
+        i_start = i_near - space_needed + 1
+        i_end = i_start + n        
+
+    return [tbl[0][i_start:i_end], tbl[1][i_start:i_end]]
     
 def interpolate(tbl, n, x):
+    tbl = choose_dots(tbl, n + 1, x)
     matr = get_matr(tbl, n)
     tmp = 1
     res = 0
-    for i in range(n):
+    for i in range(n+1):
         res += tmp * matr[i+1][0]
         tmp *= (x - matr[0][i])
     return res
         
+x_beg = -5#float(input("Input beginning value of x: "))
+x_step = 1#float(input("Input step for x value: "))
+x_amount = 10#int(input("Input amount of dots: "))
 
-x_beg = 0#float(input("Input beginning value of x: "))
-x_step = 0.25#float(input("Input step for x value: "))
-x_amount = 5#int(input("Input amount of dots: "))
-
-x_tbl, y_tbl = get_array(x_beg, x_step, x_amount) 
+x_tbl, y_tbl = get_array(x_beg, x_step, x_amount)
+print("\nCreated table:")
 print_table(x_tbl, y_tbl)
 
-print()
-n = 4#int(input("Input n: "))
-#x = float(input("Input x: "))
-print(interpolate([x_tbl, y_tbl], n+1, 0.6), f(0.6))
+print(choose_dots([x_tbl, y_tbl], 4, -4))
+'''
+x_beg = float(input("Input beginning value of x: "))
+x_step = float(input("Input step for x value: "))
+x_amount = int(input("Input amount of dots: "))
 
+x_tbl, y_tbl = get_array(x_beg, x_step, x_amount)
+print("\nCreated table:")
+print_table(x_tbl, y_tbl)
+
+n = int(input("Input n: "))
+x = float(input("Input x: "))
+
+# Results
+print("\nInterpolated: ", interpolate([x_tbl, y_tbl], n, x))
+print("F(x):", f(x))
+
+print("Root of this function is: ", interpolate([y_tbl, x_tbl], n, 0))
+
+'''
