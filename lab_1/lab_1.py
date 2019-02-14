@@ -3,7 +3,7 @@
 from math import cos, radians, ceil
 
 def f(x):
-    return x#cos(radians(90*x))
+    return cos(radians(90*x))
 
 def get_array(x_beg, step, amount):
     x_tbl = [x_beg + step*i for i in range(amount)]
@@ -28,11 +28,9 @@ def get_matr(tbl, n):
 def choose_dots(tbl, n, x):
     tbl_len = len(tbl[0])
     i_near = min(range(tbl_len), key = lambda i: abs(tbl[0][i] - x)) # index of nearest value
-
-    print(i_near, tbl[0][i_near])
     space_needed = ceil(n / 2)
     
-    if (i_near + space_needed + 1> tbl_len):
+    if (i_near + space_needed + 1 > tbl_len):
         i_end = tbl_len
         i_start = tbl_len - n
     elif (i_near < space_needed):
@@ -54,16 +52,7 @@ def interpolate(tbl, n, x):
         tmp *= (x - matr[0][i])
     return res
         
-x_beg = -5#float(input("Input beginning value of x: "))
-x_step = 1#float(input("Input step for x value: "))
-x_amount = 10#int(input("Input amount of dots: "))
 
-x_tbl, y_tbl = get_array(x_beg, x_step, x_amount)
-print("\nCreated table:")
-print_table(x_tbl, y_tbl)
-
-print(choose_dots([x_tbl, y_tbl], 4, -4))
-'''
 x_beg = float(input("Input beginning value of x: "))
 x_step = float(input("Input step for x value: "))
 x_amount = int(input("Input amount of dots: "))
@@ -76,9 +65,8 @@ n = int(input("Input n: "))
 x = float(input("Input x: "))
 
 # Results
-print("\nInterpolated: ", interpolate([x_tbl, y_tbl], n, x))
-print("F(x):", f(x))
-
+found = interpolate([x_tbl, y_tbl], n, x)
+print("\nInterpolated: ", found)
+print("F(x)        : ", f(x))
+print("Error       : ", abs(f(x) - found), "\n")
 print("Root of this function is: ", interpolate([y_tbl, x_tbl], n, 0))
-
-'''
