@@ -1,9 +1,11 @@
 # Аппроксимация ф-и, восстановление ф-и по ее дискретному значению
+# Полином Ньютона
+# Нахождение корней этим способом. 
 
 from math import cos, radians, ceil
 
 def f(x):
-    return cos(radians(90*x))
+    return cos(radians(90*x)) #cos(x)-x #x*x
 
 def get_array(x_beg, step, amount):
     x_tbl = [x_beg + step*i for i in range(amount)]
