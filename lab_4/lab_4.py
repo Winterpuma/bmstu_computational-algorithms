@@ -1,7 +1,15 @@
 # Аппроксимация ф-и
 # Наилучшее среднеквадратичное значение
+import matplotlib.pyplot as plt
+import numpy as np
 
-# Считать данные с файла
+def f(x_arr, coeff):
+    res = np.zeros(len(x_arr))
+    for i in range(len(coeff)):
+        res += coeff[i]*(x_arr**i)
+    return res                   
+
+### Считать данные с файла
 def read_from_file(filename):
     f = open(filename, "r")
     x, y, ro = [], [], []
@@ -23,13 +31,11 @@ def print_matr(matr):
     for i in matr:
         print(i)
 
-# Вычислить значение
+### Вычислить значение
 def root_mean_square(x, y, ro, n): #n - кол-во искомых коэффициентов
     length = len(x)
     sum_x_n = [sum([x[i]**j*ro[i] for i in range(length)]) for j in range(n*2 -1)]
-    print(sum_x_n)
     sum_y_x_n = [sum([x[i]**j*ro[i]*y[i] for i in range(length)]) for j in range(n)]
-    print(sum_y_x_n)
     matr = [sum_x_n[i:i+n] for i in range(n)]
     for i in range(n):
         matr[i].append(sum_y_x_n[i])
@@ -50,17 +56,25 @@ def Gauss(matr):
     a = [0 for i in range(n)]
     for i in range(n-1, -1, -1):
         for j in range(n-1, i, -1):
-            print(a[j]*matr[i][j], i, j)
             matr[i][n] -= a[j]*matr[i][j]
-        print_matr(matr)
-        print()
         a[i] = matr[i][n]/matr[i][i]
-    print("a", a)
     return a
     
 
-# Отобразить результат
+### Отобразить результат
+def show(a):
+    t = np.arange(-1.0, 5.0, 0.02)
+    plt.figure(1)
+    plt.ylabel("y")
+    plt.xlabel("x")
+    plt.plot(t, f(t, a), 'k')
+    for i in range(len(x)):
+        plt.plot(x[i], y[i], 'ro', markersize=ro[i]+2)
+    plt.show()
 
 x, y, ro = read_from_file("data2.txt")
+n = 2 # Степень многочлена    
 print_table(x, y, ro)
-root_mean_square(x, y, ro, 3)
+a = root_mean_square(x, y, ro, n+1)
+print("\na:", a)
+show(a)
