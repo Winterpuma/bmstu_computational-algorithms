@@ -47,12 +47,12 @@ def Runge_center(y, h, r):
     n = len(y)
     p = 2
     
-    ksi_h = [(y[i + 1] - y[i - 1]) / (2*h) for i in range(0, n-2)]
-    ksi_rh = [(y[i + r] - y[i - r]) / (2*h*r) for i in range(0, n-2)]
+    ksi_h = [(y[i + 1] - y[i - 1]) / (2*h) for i in range(2, n-2)]
+    ksi_rh = [(y[i + r] - y[i - r]) / (2*h*r) for i in range(2, n-2)]
     
-    return [None if  i >= n - 2
+    return [None if  i >= n - 4 or i < 0
             else (ksi_h[i] + (ksi_h[i] - ksi_rh[i]) / (r**p - 1)) 
-            for i in range(0, n)]
+            for i in range(-2, n-2)]
 
 
 def Runge_one_side(y, h, r):
