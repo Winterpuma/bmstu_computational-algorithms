@@ -4,11 +4,25 @@
 
 from math import e, log
 
+a0, a1, a2 = 1, 2, 3
+'''
 def f(x):
     return e**x
 
 def psi(y):
     return log(y)
+'''
+def f(x):
+    return (a0*x / (a1 + a2*x))
+
+def etaksi(): # производная эта по кси
+    return a1/a0
+
+def etay(y): # производная эта по у
+    return y * y
+
+def ksix(x): # производная кси по х
+    return 1 / (x*x)
 
 
 def get_table(x_beg, step, amount):
@@ -43,9 +57,10 @@ def edge_accuracy(y, h):
     return a     
 
 
-def Runge_center(y, h, r):
+def Runge_center(y, h):
     n = len(y)
     p = 2
+    r = 2
     
     ksi_h = [(y[i + 1] - y[i - 1]) / (2*h) for i in range(2, n-2)]
     ksi_rh = [(y[i + r] - y[i - r]) / (2*h*r) for i in range(2, n-2)]
@@ -55,29 +70,26 @@ def Runge_center(y, h, r):
             for i in range(-2, n-2)]
 
 
-def Runge_one_side(y, h, r):
+def Runge_left_side(y, h):
     n = len(y)
     p = 1
+
+    yh = left_side_diff(y, h)
+    y2h = [0 if i < 2 else (y[i] - y[i-2]) / (2*h) for i in range(0, n)]
     
-    ksi_h = [(y[i + 1] - y[i]) / (h) for i in range(0, n-2)]
-    ksi_rh = [(y[i + r] - y[i]) / (h*r) for i in range(0, n-2)]
-    
-    return [None if  i >= n - 2
-            else (ksi_h[i] + (ksi_h[i] - ksi_rh[i]) / (r**p - 1)) 
+    return [None if  i < 2
+            else (yh[i] + (yh[i] - y2h[i]) / (2**p - 1)) 
             for i in range(0, n)]
 
 
-def aline(y, h):
-    eta = [psi(i) for i in y]
-    l = Runge_one_side(eta, h, 2)
-    return [None if l[i] == None else l[i]*y[i] for i in range(len(l))]
+def aline(x, y):
+    return [None if x[i] == 0 else etaksi()*etay(y[i])*ksix(x[i]) for i in range(len(x))]
 
 
 def print_res_line(text, res):
     print("{:<20}".format(text), end = "")
     for i in res:
         if (i != None):
-            #print("%5.4f" % (i), end = " ")
             print("{: <15.4f}".format(i), end = "")
         else:
             print("{: <15}".format("None"), end = "")
@@ -89,13 +101,11 @@ x_h = 1
 x_amount = 11
 x, y = get_table(x_start, x_h, x_amount)
 
-r = 2
-
 print_res_line("x:", x)
 print_res_line("y:", y)
 print_res_line("Left side:", left_side_diff(y, x_h))
 print_res_line("Center differences:", center_diff(y, x_h))
 print_res_line("Edges accurate:", edge_accuracy(y, x_h))
-print_res_line("Runge side:", Runge_one_side(y, x_h, r))
-print_res_line("Runge center:", Runge_center(y, x_h, r))
-print_res_line("Alining:", aline(y, x_h))
+print_res_line("Runge left side:", Runge_left_side(y, x_h))
+print_res_line("Runge center:", Runge_center(y, x_h))
+print_res_line("Alining:", aline(x, y))
