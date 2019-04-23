@@ -14,6 +14,8 @@ def psi(y):
 '''
 def f(x):
     return (a0*x / (a1 + a2*x))
+def f_det(x):
+    return (a0*(a1+a2*x)-a0*a2*x)/((a1+a2*x)**2)
 
 def etaksi(): # производная эта по кси
     return a1/a0
@@ -103,6 +105,7 @@ x, y = get_table(x_start, x_h, x_amount)
 
 print_res_line("x:", x)
 print_res_line("y:", y)
+print_res_line("y':", [f_det(i) for i in x])
 print_res_line("Left side:", left_side_diff(y, x_h))
 print_res_line("Center differences:", center_diff(y, x_h))
 print_res_line("Edges accurate:", edge_accuracy(y, x_h))
