@@ -30,12 +30,12 @@ def get_matr(tbl, n):
 def choose_dots(tbl, n, x):
     tbl_len = len(tbl[0])
     i_near = min(range(tbl_len), key = lambda i: abs(tbl[0][i] - x)) # index of nearest value
-    space_needed = ceil(n / 2)
+    space_needed = ceil(n / 2) #amount of max space needed up or down if there is enough space 
     
-    if (i_near + space_needed + 1 > tbl_len):
+    if (i_near + space_needed + 1 > tbl_len): # if not enough dots bottomn
         i_end = tbl_len
         i_start = tbl_len - n
-    elif (i_near < space_needed):
+    elif (i_near < space_needed): # if not enough dots above
         i_start = 0
         i_end = n
     else:
