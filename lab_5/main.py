@@ -2,7 +2,8 @@ from math import pow, exp, log
 
 from interpolation import *
 from integration import integrate
-from gauss import solve_lin_system_gauss, Gauss
+from gauss import Gauss
+from dichotomy import dichotomy
 
 
 Q_data = [[2000,   4000,   6000,   8000,   10000,  12000,  14000,  16000,  18000,  20000,  22000,  24000,  26000],
@@ -16,6 +17,7 @@ EPS = 1e-4
 
 Z_c = [0, 1, 2, 3, 4]
 E_c = [12.13, 20.98, 31.00, 45.00]
+
 
 def F(curr_p):
     return coeff - 2*integrate(0, 1, lambda z: Nt(T(z), curr_p)*z)
@@ -47,34 +49,11 @@ def gamma_func(gamma, T, X):
     return gamma*gamma - right_part*5.87*pow(10, 10)/pow(T, 3)
 
 
-def find_gamma(st, end, T, X):
-    while abs(st-end) > EPS:
-        cur_gamma = (st+end)/2
-
-        if gamma_func(cur_gamma, T, X) <= 0:
-            st = cur_gamma
-        else:
-            end = cur_gamma
-
-    return (st+end)/2
-
-#def fing
-
-
-def find_max_increment(X, d_X):
-    max_inc = abs(d_X[0]/X[0])
-    for i in range(1, len(X)):
-        if abs(d_X[i]/X[i]) > max_inc:
-            max_inc = abs(d_X[i]/X[i])
-    return max_inc
-
-
 def Nt(T, P):
-    #X = [-1, 3, -1, -20, -20, -20]
-    X = [-1, 3, -1, -15, -25, -35]
+    X = [-1, 3, -1, -20, -20, -20]
 
     while True:
-        gamma = find_gamma(0, 3, T, X)
+        gamma = dichotomy(0, 3, EPS, lambda cur_gamma: gamma_func(cur_gamma, T, X))
         d_e = find_d_e(T, gamma)
         K = find_K(T, d_e)
 
@@ -89,42 +68,15 @@ def Nt(T, P):
                   [exp(X[0]), 0, -Z_c[1]*exp(X[2]), -Z_c[2]*exp(X[3]), -Z_c[3]*exp(X[4]), -Z_c[4]*exp(X[5]),
                    Z_c[1]*exp(X[2])+Z_c[2]*exp(X[3])+Z_c[3]*exp(X[4])+Z_c[4]*exp(X[5])-exp(X[0])]]
 
-
         d_X = Gauss(system)
 
-        if find_max_increment(X, d_X) < EPS:
+        if max([d_X[i]/X[i] for i in range(len(X))]) < 1e-4:
             break
-
+        
         for i in range(len(X)):
             X[i] += d_X[i]
             
     return sum([exp(i) for i in X])
-
-
-def middle(a, b):
-    return (a + b) / 2
-
-
-def dichotomy(a, b, eps, func):
-    c = middle(a, b)
-
-    f_a = func(a)
-    f_c = func(c)
-    f_b = func(b)
-
-    while abs(f_c) > eps:
-        if (f_a * f_c) <= 0:
-            b = c
-            f_b = func(b)
-        elif (f_b * f_c) <= 0:
-            a = c
-            f_a = func(a)
-        else:
-            print("Ошибка. Корень не найден.")
-            break
-        c = middle(a, b)
-        f_c = func(c)
-    return c
 
         
 if __name__ == '__main__':
@@ -137,7 +89,7 @@ if __name__ == '__main__':
 
     coeff = 7243 * (Pn / Tn)
 
-    curr_p = dichotomy(2, 25, EPS, F)
+    res_p = dichotomy(2, 25, EPS, F)
         
-    print("Result: ", curr_p)
+    print("Result: ", res_p)
 
