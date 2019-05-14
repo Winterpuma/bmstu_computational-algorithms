@@ -1,3 +1,4 @@
+# Метод средних прямоугольников
 def integrate(start, end, function):
     step = 0.05#(end - start)/20
     result = 0

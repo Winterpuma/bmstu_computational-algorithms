@@ -1,4 +1,5 @@
 from math import pow, exp, log
+from time import time
 
 from interpolation import *
 from integration import integrate
@@ -78,18 +79,19 @@ def Nt(T, P):
             
     return sum([exp(i) for i in X])
 
-        
+Pn = 0.5#float(input("Pнач: "))
+Tn = 300#float(input("Tнач: ")
+T0 = 12000#float(input("T0: "))
+Tw = 6000#float(input("Tw: "))
+m = 12#float(input("m: "))
+
+coeff = 7243 * (Pn / Tn)  
+
 if __name__ == '__main__':
-
-    Pn = 0.5#float(input("Pнач: "))
-    Tn = 300#float(input("Tнач: ")
-    T0 = 3000#float(input("T0: "))
-    Tw = 3000#float(input("Tw: "))
-    m = 6#float(input("m: "))
-
-    coeff = 7243 * (Pn / Tn)
-
+    a = time()
     res_p = dichotomy(2, 25, EPS, F)
-        
+    b = time()
     print("Result: ", res_p)
+    t = b - a
+    
 

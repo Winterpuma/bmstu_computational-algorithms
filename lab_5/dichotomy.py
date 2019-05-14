@@ -9,17 +9,20 @@ def dichotomy(a, b, eps, func):
     f_c = func(c)
     f_b = func(b)
 
-    while abs(f_c) > eps:
+    if (f_a * f_b) > 0:
+        print("Функция не меняет знак на концах отрезка.")
+        return None
+    
+    while abs(b - a) > eps*c + eps:
         if (f_a * f_c) <= 0:
             b = c
             f_b = func(b)
-        elif (f_b * f_c) <= 0:
+        else:
             a = c
             f_a = func(a)
-        else:
-            print("Ошибка. Корень не найден.")
-            break
+            
         c = middle(a, b)
         f_c = func(c)
         
     return c
+    
