@@ -1,4 +1,4 @@
-# Метод средних прямоугольников
+# Исправить метод интегрирования/заменить на новый
 def integrate(start, end, function):
     step = 0.05#(end - start)/20
     result = 0
