@@ -5,7 +5,7 @@
 [**№3 Многомерная**](https://github.com/Winterpuma/bmstu_computational-algorithms/tree/master/lab_3)  
 [**№4 Среднеквадратичное значение**](https://github.com/Winterpuma/bmstu_computational-algorithms/tree/master/lab_4)  
 
-### Интегрирование
+### Системы нелинейных уравнений
 [**№5 Давление**](https://github.com/Winterpuma/bmstu_computational-algorithms/tree/master/lab_5)  
 
 ### Дифференцирование
